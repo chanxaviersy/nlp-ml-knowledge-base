@@ -1,7 +1,12 @@
-# Lab 01: 情感分析 | Sentiment Analysis
+# 🎯 Lab 01: 情感分析 | Sentiment Analysis
 
 > 摘要：本 Lab 使用 TF-IDF + 傳統 ML 算法（Naive Bayes、SVM、邏輯回歸）對中文評論進行情感分類（正面/負面）。  
 > Abstract: This lab uses TF-IDF and traditional ML algorithms to classify Chinese reviews as positive or negative.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/chanxaviersy/nlp-ml-knowledge-base/blob/main/docs/08-labs/01-sentiment-analysis/lab.ipynb)
+![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue)
+![No GPU](https://img.shields.io/badge/GPU-not_required-green)
+![License MIT](https://img.shields.io/badge/License-MIT-yellow)
 
 ---
 

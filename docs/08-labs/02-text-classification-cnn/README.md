@@ -1,7 +1,12 @@
-# Lab 02: CNN 文本分類 | Text Classification with CNN
+# 🧠 Lab 02: CNN 文本分類 | Text Classification with CNN
 
 > 摘要：本 Lab 使用 PyTorch 實現 TextCNN 模型進行中文文本分類，對比不同 filter size、embedding 預訓練的影響。  
 > Abstract: This lab implements TextCNN with PyTorch for Chinese text classification and compares different filter sizes and pretrained embeddings.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/chanxaviersy/nlp-ml-knowledge-base/blob/main/docs/08-labs/02-text-classification-cnn/lab.ipynb)
+![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue)
+![GPU Recommended](https://img.shields.io/badge/GPU-recommended-orange)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c)
 
 ---
 

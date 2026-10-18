@@ -1,7 +1,12 @@
-# Lab 03: Transformer 情感分析 | Transformer-based Sentiment Analysis
+# 🤖 Lab 03: Transformer 情感分析 | Transformer-based Sentiment Analysis
 
 > 摘要：本 Lab 使用 HuggingFace Transformers 微調 BERT 進行中文情感分類。  
 > Abstract: This lab fine-tunes BERT for Chinese sentiment classification using HuggingFace Transformers.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/chanxaviersy/nlp-ml-knowledge-base/blob/main/docs/08-labs/03-transformer-sentiment/lab.ipynb)
+![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue)
+![GPU Required](https://img.shields.io/badge/GPU-required-red)
+![Transformers](https://img.shields.io/badge/Transformers-4.35+-ff9d00)
 
 ---
 

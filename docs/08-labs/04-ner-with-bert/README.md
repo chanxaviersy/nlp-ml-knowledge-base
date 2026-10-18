@@ -1,7 +1,12 @@
-# Lab 04: BERT 命名實體識別 | NER with BERT
+# 🔎 Lab 04: BERT 命名實體識別 | NER with BERT
 
 > 摘要：本 Lab 使用 BERT 微調實現中文命名實體識別（NER），識別 PER、LOC、ORG 等實體類型。  
 > Abstract: This lab fine-tunes BERT for Chinese Named Entity Recognition.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/chanxaviersy/nlp-ml-knowledge-base/blob/main/docs/08-labs/04-ner-with-bert/lab.ipynb)
+![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue)
+![GPU Required](https://img.shields.io/badge/GPU-required-red)
+![seqeval](https://img.shields.io/badge/seqeval-required-green)
 
 ---
 

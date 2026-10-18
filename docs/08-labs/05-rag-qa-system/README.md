@@ -1,7 +1,12 @@
-# Lab 05: RAG 問答系統 | RAG-based QA System
+# 🔍 Lab 05: RAG 問答系統 | RAG-based QA System
 
 > 摘要：本 Lab 構建一個完整的 RAG（檢索增強生成）問答系統，包括文檔加載、向量化、檢索、生成和評估。  
 > Abstract: This lab builds a complete RAG QA system including document loading, vectorization, retrieval, generation, and evaluation.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/chanxaviersy/nlp-ml-knowledge-base/blob/main/docs/08-labs/05-rag-qa-system/lab.ipynb)
+![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue)
+![No GPU](https://img.shields.io/badge/GPU-not_required-green)
+![LangChain](https://img.shields.io/badge/LangChain-0.1+-1c3c3c)
 
 ---
 
