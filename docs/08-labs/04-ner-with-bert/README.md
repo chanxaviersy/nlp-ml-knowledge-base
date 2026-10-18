@@ -504,4 +504,70 @@ for e in entities:
 
 ---
 
+## ⚡ 快速開始 | Quick Start
+
+```bash
+cd docs/08-labs/04-ner-with-bert
+pip install transformers datasets seqeval
+python lab.py
+```
+
+需要 `seqeval` 評估實體級 F1（不是 token 級別）。
+
+---
+
+## 🧪 練習題 | Exercises
+
+| # | 難度 | 題目 |
+|---|------|------|
+| 1 | ⭐ | 加入 **CRF 層** 在 BERT 之上提升 F1 |
+| 2 | ⭐⭐ | 對比 `bert-base-chinese` vs `hfl/chinese-roberta-wwm-ext` |
+| 3 | ⭐⭐ | 嘗試 **Global Pointer** 或 **TPLinker** 等新方法 |
+| 4 | ⭐⭐⭐ | 嵌套實體識別（如「北京大學」中包含「北京」）|
+| 5 | ⭐⭐⭐ | 加入 **規則字典** 做後處理糾錯 |
+| 6 | ⭐⭐⭐ | 構建 NER pipeline + 規則 + 模型集成 |
+| 7 | ⭐⭐⭐⭐ | Few-shot NER（10-shot 學習新實體類型） |
+
+---
+
+## 🔧 標籤方案 | Labeling Schemes
+
+| 方案 | 優點 | 缺點 |
+|------|------|------|
+| **BIO** | 簡單直觀 | 邊界不夠清晰 |
+| **BIOES** | 邊界更清晰 | 標籤多 |
+| **BMES** | 同 BIOES | — |
+| **IO** | 標籤少 | 邊界信息弱 |
+
+推薦：**中文 NER 用 BIOES**。
+
+---
+
+## 🎯 標籤對齊 | Word Label Alignment
+
+```python
+# 重要：BPE/WordPiece 後，每個詞可能拆成多個 subword
+# 策略：只在第一個 subword 上分配實體標籤，其他設為 -100
+# 評估時忽略 -100 位置
+
+# 範例：
+#   原始: 台積電  →  B-ORG
+#   Token: 台 積 電   (拆成 3 個)
+#   Label: B-ORG  -100  -100
+```
+
+---
+
+## 📈 評估指標 | Metrics
+
+| 指標 | 含義 | 公式 |
+|------|------|------|
+| **Token F1** | 每個 token 單獨算 | 簡化評估 |
+| **Entity F1** | 整個實體必須完全匹配 | 推薦使用 |
+| **Span F1** | 起止位置 + 類型 | 更嚴格 |
+
+**seqeval 庫** 默認用 Entity-level F1。
+
+---
+
 *© 2026 chanxaviersy*

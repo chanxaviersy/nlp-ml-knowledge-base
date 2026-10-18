@@ -754,4 +754,120 @@ prediction = model(molecule_data)
 
 ---
 
+## ⚡ 5 分鐘快速實戰 | Quick Practice
+
+### 1. PyTorch Geometric 構建第一個 GCN
+
+```python
+import torch
+from torch_geometric.nn import GCNConv
+from torch_geometric.data import Data
+
+# 構建圖
+x = torch.randn(100, 32)  # 100 個節點
+edge_index = torch.tensor([[0,1,1,2], [1,0,2,1]], dtype=torch.long)
+
+# GCN 模型
+class GCN(torch.nn.Module):
+    def __init__(self, in_dim, hidden_dim, out_dim):
+        super().__init__()
+        self.conv1 = GCNConv(in_dim, hidden_dim)
+        self.conv2 = GCNConv(hidden_dim, out_dim)
+    
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+        x = torch.relu(self.conv1(x, edge_index))
+        x = torch.dropout(x, p=0.5, train=self.training)
+        x = self.conv2(x, edge_index)
+        return x
+
+data = Data(x=x, edge_index=edge_index)
+model = GCN(32, 64, 7)
+output = model(data)  # (100, 7)
+```
+
+### 2. 在 Cora 數據集訓練
+
+```python
+from torch_geometric.datasets import Planetoid
+dataset = Planetoid(root='/tmp/Cora', name='Cora')
+data = dataset[0]
+
+model = GCN(dataset.num_features, 16, dataset.num_classes)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+criterion = torch.nn.CrossEntropyLoss()
+
+for epoch in range(200):
+    model.train()
+    optimizer.zero_grad()
+    out = model(data)
+    loss = criterion(out[data.train_mask], data.y[data.train_mask])
+    loss.backward()
+    optimizer.step()
+
+# 評估
+model.eval()
+pred = out.argmax(dim=1)
+acc = (pred[data.test_mask] == data.y[data.test_mask]).float().mean()
+print(f"Test Accuracy: {acc:.4f}")
+```
+
+### 3. 鏈接預測 (VGAE)
+
+```python
+from torch_geometric.nn import VGAE
+from torch_geometric.utils import negative_sampling
+
+# 變分圖自編碼器
+model = VGAE(encoder=VGAEEncoder(16, 16))
+
+# 訓練
+z = model.encode(x, edge_index)
+loss = model.recon_loss(z, edge_index) + model.kl_loss()
+
+# 預測邊
+pred_edge = model.decode_all(z)
+```
+
+### 4. 分子性質預測
+
+```python
+from torch_geometric.datasets import MoleculeNet
+dataset = MoleculeNet(root='/tmp', name='ESOL')
+
+# 每個分子是一個圖
+# x: 原子特徵, edge_index: 化學鍵, y: 性質
+for data in dataset:
+    print(f"Molecule: {data.x.shape}, Property: {data.y}")
+    break
+```
+
+---
+
+## 🧪 練習題 | Exercises
+
+| # | 難度 | 題目 |
+|---|------|------|
+| 1 | ⭐ | 在 Cora 上訓練 GCN 達到 80%+ 準確率 |
+| 2 | ⭐⭐ | 對比 GCN / GAT / GraphSAGE 在 CiteSeer |
+| 3 | ⭐⭐ | 構建電影推薦系統：用戶-電影二部圖 |
+| 4 | ⭐⭐⭐ | 預測分子水溶性（ESOL）|
+| 5 | ⭐⭐⭐ | 實現 Graph Auto-Encoder 做鏈接預測 |
+| 6 | ⭐⭐⭐⭐ | 構建交通預測模型：時空 GNN |
+
+---
+
+## 🛠 工具庫
+
+| 庫 | 特色 |
+|----|------|
+| **PyTorch Geometric** | 最流行，研究首選 |
+| **DGL** | 多框架支持 |
+| **NetworkX** | 圖算法與分析 |
+| **OGB** | 基準數據集 |
+| **Spektral** | Keras/TF 後端 |
+| **StellarGraph** | 工業級 |
+
+---
+
 *© 2026 chanxaviersy*

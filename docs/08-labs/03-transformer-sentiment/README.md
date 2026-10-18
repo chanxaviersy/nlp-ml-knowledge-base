@@ -383,4 +383,60 @@ A: 檢查數據品質、類別分佈、學習率。中文任務優先選擇 `chi
 
 ---
 
+## ⚡ 快速開始 | Quick Start
+
+```bash
+cd docs/08-labs/03-transformer-sentiment
+pip install transformers datasets accelerate
+python lab.py
+# 預設使用 3000 條訓練 + 1000 條測試（可在程式碼中調整）
+```
+
+如需在 Apple Silicon 上加速，PyTorch 會自動使用 MPS。
+
+---
+
+## 🧪 練習題 | Exercises
+
+| # | 難度 | 題目 |
+|---|------|------|
+| 1 | ⭐ | 改用 `hfl/chinese-roberta-wwm-ext` 對比效果 |
+| 2 | ⭐⭐ | 嘗試 `bert-base-chinese` vs `hfl/chinese-macbert-base` |
+| 3 | ⭐⭐ | 加上 **混合精度訓練** (fp16) 加速 |
+| 4 | ⭐⭐ | 用 **LoRA** 微調（見 `05-transformers/03-llm-finetuning`）|
+| 5 | ⭐⭐⭐ | 嘗試 **層凍結**：只訓練最後 4 層 |
+| 6 | ⭐⭐⭐ | 加入 **對抗訓練** (FGM/PGD) |
+| 7 | ⭐⭐⭐⭐ | 部署為 FastAPI / Gradio 服務 |
+
+---
+
+## 🔧 微調最佳實踐 | Best Practices
+
+```python
+# 推薦超參
+EPOCHS = 3-5           # 太多會過擬合
+LR = 2e-5              # BERT 黃金學習率
+BATCH = 16             # 視顯存調整
+MAX_LEN = 128          # 電商評論足夠
+WARMUP = 0.1           # 10% warmup
+```
+
+- **資料增強**：回譯（zh→en→zh）、同義詞替換
+- **對抗訓練**：FGM/PGD
+- **多任務學習**：加入語言模型頭
+- **集成**：5 個不同 seed 模型取平均
+
+---
+
+## 📈 預期表現 | Expected Performance
+
+| 模型 | F1 | 訓練時間（GPU）|
+|------|------|------|
+| bert-base-chinese | 0.93+ | ~3 分鐘 |
+| chinese-roberta-wwm-ext | 0.94+ | ~3 分鐘 |
+| chinese-macbert-base | 0.94+ | ~4 分鐘 |
+| xlm-roberta-base | 0.92+ | ~5 分鐘 |
+
+---
+
 *© 2026 chanxaviersy*

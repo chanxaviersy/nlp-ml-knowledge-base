@@ -445,4 +445,87 @@ demo.launch(server_name="0.0.0.0", server_port=7860)
 
 ---
 
+## ⚡ 快速開始 | Quick Start
+
+```bash
+cd docs/08-labs/05-rag-qa-system
+
+# 1. 安裝
+pip install langchain langchain-community faiss-cpu sentence-transformers
+
+# 2. 執行（使用本地嵌入，無需 API key）
+python lab.py
+
+# 3. 帶 LLM 的版本（需 OpenAI API key）
+export OPENAI_API_KEY="sk-..."
+python lab.py --llm openai
+```
+
+**互動測試**：
+```
+問題: 台積電的創辦人是誰？
+💡 簡短回答: 張忠謀於 1987 年在台灣新竹創立台積電...
+```
+
+---
+
+## 🧪 練習題 | Exercises
+
+| # | 難度 | 題目 |
+|---|------|------|
+| 1 | ⭐ | 替換嵌入模型為 `BAAI/bge-m3`（效果更好）|
+| 2 | ⭐ | 改用 **Hybrid Search**（BM25 + 嵌入）|
+| 3 | ⭐⭐ | 加入 **Cross-Encoder Re-ranking** |
+| 4 | ⭐⭐ | 嘗試 **HyDE**（Hypothetical Document Embeddings）|
+| 5 | ⭐⭐ | 構建 **Multi-hop QA**（多文檔推理）|
+| 6 | ⭐⭐⭐ | 加入 **Query Rewriting** / **Step-back Prompting** |
+| 7 | ⭐⭐⭐ | 部署為 FastAPI + Streamlit 服務 |
+| 8 | ⭐⭐⭐⭐ | 接入 **GraphRAG**（知識圖譜增強 RAG）|
+
+---
+
+## 🏗️ 完整 RAG 架構
+
+```
+User Query
+    ↓
+Query Preprocessing (rewrite, expand, decompose)
+    ↓
+Hybrid Retrieval (BM25 + Embeddings)
+    ↓
+Re-ranking (Cross-Encoder)
+    ↓
+Context Compression
+    ↓
+LLM Generation
+    ↓
+Post-processing (citation, fact-check)
+```
+
+---
+
+## 📊 評估指標 | Evaluation Metrics
+
+| 指標 | 含義 | 工具 |
+|------|------|------|
+| **Context Precision** | 檢索文檔相關性 | RAGAS |
+| **Context Recall** | 必要信息是否都檢索到 | RAGAS |
+| **Faithfulness** | 答案是否忠於上下文 | RAGAS |
+| **Answer Relevance** | 答案對問題的相關性 | RAGAS |
+| **Hit Rate** | 正確答案是否在 top-k | 自定 |
+
+---
+
+## 🔧 常見優化 | Common Optimizations
+
+| 問題 | 解決方案 |
+|------|----------|
+| 答案不準確 | 換更好嵌入 / 加入重排序 |
+| 召回不足 | 加大 top-k / Hybrid Search |
+| 上下文超長 | Context Compression |
+| 速度慢 | 緩存 / 預計算 / GPU 加速 |
+| 幻覺 | 嚴格 prompt / Self-Check |
+
+---
+
 *© 2026 chanxaviersy*

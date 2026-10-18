@@ -883,4 +883,125 @@ def coverage(all_recommendations, n_items):
 
 ---
 
+## ⚡ 5 分鐘快速實戰 | Quick Practice
+
+### 1. Surprise 庫基礎推薦
+
+```python
+# pip install scikit-surprise
+from surprise import Dataset, SVD, accuracy
+from surprise.model_selection import train_test_split
+
+# 加載 MovieLens 100K
+data = Dataset.load_builtin("ml-100k")
+trainset, testset = train_test_split(data, test_size=0.2)
+
+# 訓練 SVD
+model = SVD(n_factors=50, n_epochs=20)
+model.fit(trainset)
+predictions = model.test(testset)
+accuracy.rmse(predictions)
+```
+
+### 2. 兩塔模型（TensorFlow）
+
+```python
+import tensorflow as tf
+import tensorflow_recommenders as tfrs
+
+# 用戶和物品的 embedding
+user_model = tf.keras.Sequential([
+    tf.keras.layers.StringLookup(vocabulary=unique_user_ids),
+    tf.keras.layers.Embedding(len(unique_user_ids), 64),
+])
+item_model = tf.keras.Sequential([
+    tf.keras.layers.StringLookup(vocabulary=unique_item_ids),
+    tf.keras.layers.Embedding(len(unique_item_ids), 64),
+])
+
+# 構建雙塔
+class TwoTowerModel(tfrs.Model):
+    def __init__(self, user_model, item_model):
+        super().__init__()
+        self.user_model = user_model
+        self.item_model = item_model
+        self.task = tfrs.tasks.Retrieval(metrics=tfrs.metrics.FactorizedTopK(items))
+    
+    def compute_loss(self, features, training=False):
+        return self.task(user_embeddings, item_embeddings)
+```
+
+### 3. 隱式反饋 ALS (implicit)
+
+```python
+# pip install implicit
+import implicit
+from scipy.sparse import csr_matrix
+
+# user_items 為稀疏矩陣
+model = implicit.als.AlternatingLeastSquares(factors=64, regularization=0.01)
+model.fit(user_items_sparse)
+
+# 為用戶 0 推薦 10 個物品
+user_items_sparse_T = user_items_sparse.T.tocsr()
+ids, scores = model.recommend(0, user_items_sparse[0], N=10)
+```
+
+### 4. 集成到 LangChain
+
+```python
+from langchain.chains import LLMChain
+from langchain.prompts import PromptTemplate
+
+# 用 LLM 做解釋性推薦
+prompt = PromptTemplate(
+    input_variables=["user_history", "candidate"],
+    template="基於用戶歷史 {user_history}，為什麼推薦 {candidate}？",
+)
+```
+
+---
+
+## 🧪 練習題 | Exercises
+
+| # | 難度 | 題目 |
+|---|------|------|
+| 1 | ⭐ | 在 MovieLens 100K 上訓練 SVD，計算 RMSE |
+| 2 | ⭐⭐ | 對比 User-CF / Item-CF / SVD 三種方法 |
+| 3 | ⭐⭐ | 實現 NCF（神經協同過濾）|
+| 4 | ⭐⭐⭐ | 在 MovieLens 1M 上訓練 DeepFM |
+| 5 | ⭐⭐⭐ | 實現 SASRec 做序列推薦 |
+| 6 | ⭐⭐⭐⭐ | 用 LLM 為推薦結果生成自然語言解釋 |
+
+---
+
+## 🏗️ 工業級架構
+
+```
+候選生成 (Coarse Ranking)
+    ↓  ANN 檢索 (Faiss/Milvus)
+粗排
+    ↓  雙塔 / 簡單模型
+精排
+    ↓  Wide&Deep / DeepFM / DIN
+重排
+    ↓  規則 / 多樣性 / 業務邏輯
+最終展示
+```
+
+---
+
+## 🛠 工具庫
+
+| 庫 | 特色 |
+|----|------|
+| **Surprise** | 經典 ML 算法 |
+| **implicit** | 隱式反饋 ALS |
+| **LightFM** | 混合推薦 |
+| **RecBole** | 統一學術框架 |
+| **TensorFlow Recommenders** | TF 生態 |
+| **Microsoft Recommenders** | 工業級 |
+
+---
+
 *© 2026 chanxaviersy*

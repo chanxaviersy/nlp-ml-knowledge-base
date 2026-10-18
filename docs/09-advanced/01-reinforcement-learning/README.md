@@ -905,4 +905,93 @@ env.close()
 
 ---
 
+## ⚡ 5 分鐘快速實戰 | Quick Practice
+
+### 1. OpenAI Gym 環境互動
+
+```python
+import gymnasium as gym
+
+env = gym.make("CartPole-v1")
+obs, info = env.reset()
+total = 0
+for _ in range(500):
+    action = env.action_space.sample()  # 隨機策略
+    obs, reward, term, trunc, info = env.step(action)
+    total += reward
+    if term or trunc:
+        break
+print(f"隨機策略得分: {total}")
+env.close()
+```
+
+### 2. Stable-Baselines3 訓練 PPO
+
+```python
+# pip install stable-baselines3
+from stable_baselines3 import PPO
+import gymnasium as gym
+
+env = gym.make("CartPole-v1")
+model = PPO("MlpPolicy", env, verbose=1)
+model.learn(total_timesteps=10_000)
+
+# 評估
+obs, _ = env.reset()
+total = 0
+for _ in range(500):
+    action, _ = model.predict(obs)
+    obs, reward, term, trunc, _ = env.step(action)
+    total += reward
+    if term or trunc:
+        break
+print(f"PPO 得分: {total}")
+```
+
+### 3. DPO 微調 LLM
+
+```python
+# pip install trl
+from trl import DPOTrainer, DPOConfig
+from datasets import load_dataset
+
+config = DPOConfig(
+    beta=0.1, learning_rate=1e-6, num_train_epochs=1,
+    per_device_train_batch_size=2, gradient_accumulation_steps=4,
+)
+dataset = load_dataset("Anthropic/hh-rlhf", split="train[:1000]")
+# 需要 chosen/rejected 字段
+trainer = DPOTrainer(model=sft_model, ref_model=ref_model, 
+                    args=config, train_dataset=dataset, tokenizer=tokenizer)
+trainer.train()
+```
+
+---
+
+## 🧪 練習題 | Exercises
+
+| # | 難度 | 題目 |
+|---|------|------|
+| 1 | ⭐ | 在 CartPole 上訓練 DQN 達到 475+ 分 |
+| 2 | ⭐⭐ | 在 LunarLander 上訓練 PPO |
+| 3 | ⭐⭐ | 對比 DQN / PPO / A2C 在 Pong 環境的表現 |
+| 4 | ⭐⭐⭐ | 實現 DPO 對 Llama-3-8B 做 RLHF 微調 |
+| 5 | ⭐⭐⭐ | 構建 Multi-Agent RL：兩個智能體對抗訓練 |
+| 6 | ⭐⭐⭐⭐ | 從零實現 PPO 訓練自己的 RLHF 模型 |
+
+---
+
+## 🛠 主流工具庫
+
+| 庫 | 描述 |
+|----|------|
+| **Stable-Baselines3** | 最流行的 RL 庫 |
+| **RLlib (Ray)** | 分散式 RL |
+| **Gymnasium** | 環境標準接口 |
+| **CleanRL** | 單文件實現，易學 |
+| **TRL** | Transformer RL（DPO/PPO for LLM） |
+| **OpenAI Spinning Up** | 教學資源 |
+
+---
+
 *© 2026 chanxaviersy*

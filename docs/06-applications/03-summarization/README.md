@@ -343,4 +343,56 @@ FEW_SHOT_PROMPT = """請為以下文章生成 100 字以內的摘要。
 
 ---
 
+## ⚡ 5 分鐘快速實戰 | Quick Practice
+
+```python
+from transformers import pipeline
+
+# 1. 抽取式摘要（最簡單）
+extractive = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
+text = """Your long article here..."""
+summary = extractive(text, max_length=130, min_length=30, do_sample=False)
+print(summary[0]["summary_text"])
+
+# 2. 生成式摘要（更靈活）
+abstractive = pipeline("summarization", model="facebook/bart-large-cnn")
+summary = abstractive(text, max_length=150, min_length=50, do_sample=False)
+
+# 3. 中英跨語言摘要
+m2m = pipeline("translation", model="facebook/m2m100_418M")
+```
+
+**常用預訓練模型**：
+- 英文：`facebook/bart-large-cnn`, `google/pegasus-xsum`
+- 中文：`csebuetnlp/mT5_multilingual_XLSum`, `IDEA-CCNL/Randeng-Pegasus-238M-Summary-Chinese`
+- 多語言：`csebuetnlp/mT5_multilingual_XLSum`
+
+---
+
+## 🧪 練習題 | Exercises
+
+| # | 難度 | 題目 |
+|---|------|------|
+| 1 | ⭐ | 用 TextRank 對 5 篇新聞文章生成抽取式摘要 |
+| 2 | ⭐⭐ | 對比 BART 與 PEGASUS 在 100 篇文章上的 ROUGE 分數 |
+| 3 | ⭐⭐ | 構建新聞文章 + 標題的微調數據集（10K 樣本）|
+| 4 | ⭐⭐⭐ | 微調 PEGASUS-Chinese 做中文摘要 |
+| 5 | ⭐⭐⭐ | 長文檔摘要：實現 **Map-Reduce** / **Refine** 策略 |
+| 6 | ⭐⭐⭐⭐ | 結合 RAG：動態加載外部知識做摘要 |
+
+---
+
+## 📊 評估指標 | Evaluation
+
+| 指標 | 含義 | 適用 |
+|------|------|------|
+| **ROUGE-1/2/L** | n-gram 重疊度 | 抽取式為主 |
+| **BLEU** | 翻譯/生成質量 | 生成式 |
+| **BERTScore** | 語義相似度 | 更現代 |
+| **BARTScore** | 生成似然 | 端到端 |
+| **FactCC** | 事實一致性 | 防幻覺 |
+| **QAGS** | QA 評估生成 | 摘要 |
+
+---
+
 *© 2026 chanxaviersy*

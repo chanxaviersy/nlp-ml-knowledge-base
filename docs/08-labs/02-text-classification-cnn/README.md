@@ -455,6 +455,53 @@ for text in test_texts:
 
 - [Kim, Y. (2014). Convolutional Neural Networks for Sentence Classification. EMNLP.](https://arxiv.org/abs/1408.5882)
 - [PyTorch 官方教程](https://pytorch.org/tutorials/beginner/text_sentiment_ngrams_tutorial.html)
+- [TextCNN 論文解讀](https://zhuanlan.zhihu.com/p/77633433)
+
+---
+
+## ⚡ 快速開始 | Quick Start
+
+```bash
+cd docs/08-labs/02-text-classification-cnn
+python lab.py
+# 訓練 10 個 epoch，視覺化 loss/acc 曲線與混淆矩陣
+```
+
+需要 `torch >= 2.0`、`jieba`、`datasets`。
+
+---
+
+## 🧪 練習題 | Exercises
+
+| # | 難度 | 題目 |
+|---|------|------|
+| 1 | ⭐ | 改變 `kernel_sizes=(3, 4, 5)` 為 `(2,3,4,5,6)`，觀察效果 |
+| 2 | ⭐⭐ | 用預訓練的 word2vec / Tencent Embedding 替換隨機初始化 |
+| 3 | ⭐⭐ | 實現 **DPCNN**（深層金字塔 CNN）對比 TextCNN |
+| 4 | ⭐⭐⭐ | 雙通道 embedding（static + non-static） |
+| 5 | ⭐⭐⭐ | 加入 Self-Attention 機制（即 TextRCNN） |
+| 6 | ⭐⭐⭐⭐ | 在 4 萬條 THUCNews 上做多分類（10+ 類） |
+
+---
+
+## 📊 預期結果 | Expected Results
+
+| 配置 | 準確率 | 備註 |
+|------|--------|------|
+| Random Init, Filter=[2,3,4,5] | 0.85+ | 基線 |
+| Pretrained Embedding | 0.92+ | 大幅提升 |
+| Filter=[3,4,5,6,7] | 0.88+ | 略好 |
+| Dropout 0.3 vs 0.5 | 0.83 vs 0.85 | 視數據集 |
+
+---
+
+## 🔧 關鍵技巧 | Key Tips
+
+- **Padding 必須設為 0**，這樣 max-pooling 不會選到 padding
+- **kernel size 不要太大**（3-5 最佳），太大感受野過大會損失信息
+- **多尺度融合**：用不同 kernel 提取不同 n-gram 特徵
+- **Dropout 0.3-0.5** 在卷積後、FC 前最有效
+- **批次大小** 16-64，視顯存而定
 
 ---
 

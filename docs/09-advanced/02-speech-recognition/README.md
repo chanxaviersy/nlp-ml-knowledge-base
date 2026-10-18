@@ -601,4 +601,92 @@ for chunk in result["chunks"]:
 
 ---
 
+## ⚡ 5 分鐘快速實戰 | Quick Practice
+
+### 1. Whisper 語音識別 (1 行)
+
+```python
+import whisper
+model = whisper.load_model("base")
+result = model.transcribe("audio.mp3", language="zh")
+print(result["text"])
+```
+
+### 2. HuggingFace 語音翻譯
+
+```python
+from transformers import pipeline
+
+# 多語言 ASR
+asr = pipeline("automatic-speech-recognition", model="openai/whisper-small")
+text = asr("audio.mp3", return_timestamps=True)["text"]
+
+# 翻譯為英文
+translator = pipeline("translation", model="facebook/m2m100_418M")
+english = translator(text, src_lang="zh", tgt_lang="en")[0]["translation_text"]
+```
+
+### 3. 文本轉語音 (TTS)
+
+```python
+# 方法 1：HuggingFace
+from transformers import pipeline
+tts = pipeline("text-to-speech", model="microsoft/speecht5_tts")
+speech = tts("Hello, this is a test.")
+# 播放：speech["audio"]
+
+# 方法 2：Coqui TTS
+# from TTS.api import TTS
+# tts = TTS("tts_models/zh-CN/baker/tacotron2-DDC-GST")
+# tts.tts_to_file(text="你好", file_path="out.wav")
+```
+
+### 4. 音頻特徵提取
+
+```python
+import librosa
+import numpy as np
+
+# 載入音頻
+y, sr = librosa.load("audio.wav", sr=16000)
+
+# MFCC 特徵
+mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
+
+# Mel 頻譜
+mel = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=80)
+log_mel = librosa.power_to_db(mel)
+
+# 零交叉率（語音活動檢測）
+zcr = librosa.feature.zero_crossing_rate(y)
+```
+
+---
+
+## 🧪 練習題 | Exercises
+
+| # | 難度 | 題目 |
+|---|------|------|
+| 1 | ⭐ | 用 Whisper 識別 5 段不同語言的音頻 |
+| 2 | ⭐⭐ | 比較 Whisper base/small/medium 在 10 段中文音頻的 WER |
+| 3 | ⭐⭐ | 用 TTS 合成 5 段不同情緒的語音 |
+| 4 | ⭐⭐⭐ | 微調 Whisper 在自定義語音數據（如專業術語）|
+| 5 | ⭐⭐⭐ | 構建語音對話系統：ASR → LLM → TTS |
+| 6 | ⭐⭐⭐⭐ | 聲音克隆：3 秒樣本克隆任意聲音 |
+
+---
+
+## 🎧 開源工具
+
+| 工具 | 用途 |
+|------|------|
+| **Whisper** | OpenAI 多語言 ASR |
+| **ESPnet** | 端到端語音處理 |
+| **Kaldi** | 經典 ASR 工具 |
+| **Coqui TTS** | 高質量 TTS |
+| **librosa** | 音頻分析 |
+| **pyannote.audio** | 說話人分離 |
+
+---
+
 *© 2026 chanxaviersy*

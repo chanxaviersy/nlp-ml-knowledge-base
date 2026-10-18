@@ -613,4 +613,103 @@ def agent_api():
 
 ---
 
+## ⚡ 5 分鐘快速實戰 | Quick Practice
+
+### 1. LangChain 簡單 Agent
+
+```python
+from langchain.agents import create_react_agent, AgentExecutor
+from langchain.tools import Tool
+from langchain_community.llms import OpenAI
+
+# 定義工具
+def search_func(query: str) -> str:
+    return f"Search result for: {query}"
+
+tools = [
+    Tool(name="Search", func=search_func, description="網路搜索"),
+    Tool(name="Calculator", func=lambda x: eval(x), description="數學計算"),
+]
+
+# 創建 Agent
+from langchain import hub
+prompt = hub.pull("hwchase17/react")
+agent = create_react_agent(llm=OpenAI(temperature=0), tools=tools, prompt=prompt)
+executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+
+executor.invoke({"input": "What is 25 * 48?"})
+```
+
+### 2. Function Calling (OpenAI)
+
+```python
+from openai import OpenAI
+import json
+
+client = OpenAI()
+tools = [{
+    "type": "function",
+    "function": {
+        "name": "get_weather",
+        "description": "獲取天氣",
+        "parameters": {
+            "type": "object",
+            "properties": {"location": {"type": "string"}},
+            "required": ["location"],
+        },
+    },
+}]
+
+response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": "What's the weather in Taipei?"}],
+    tools=tools,
+)
+```
+
+### 3. AutoGen 多 Agent
+
+```python
+from autogen import AssistantAgent, UserProxyAgent
+
+assistant = AssistantAgent(
+    "assistant",
+    llm_config={"model": "gpt-4"},
+)
+user_proxy = UserProxyAgent(
+    "user",
+    code_execution_config={"work_dir": "coding"},
+)
+
+user_proxy.initiate_chat(assistant, message="Plot a sine wave.")
+```
+
+---
+
+## 🧪 練習題 | Exercises
+
+| # | 難度 | 題目 |
+|---|------|------|
+| 1 | ⭐ | 構建 ReAct Agent：能調用「搜索」+「計算器」 |
+| 2 | ⭐⭐ | 加入 Memory：對話歷史保留 |
+| 3 | ⭐⭐ | Multi-Agent：研究員 + 寫作員 + 編輯 |
+| 4 | ⭐⭐⭐ | 構建 Code Agent：自動寫 Python 並執行 |
+| 5 | ⭐⭐⭐ | 構建 RAG Agent：先檢索再回答 |
+| 6 | ⭐⭐⭐⭐ | 構建 Browser Agent：自動網頁操作 |
+
+---
+
+## 🎯 Agent 設計模式 | Design Patterns
+
+| 模式 | 描述 | 適用 |
+|------|------|------|
+| **ReAct** | Reasoning + Acting | 通用 |
+| **Reflexion** | 自我反思 | 錯誤恢復 |
+| **Plan-and-Execute** | 先計劃再執行 | 複雜任務 |
+| **Multi-Agent** | 多 Agent 協作 | 開放問題 |
+| **Tool-Use** | 工具調用 | 結構化任務 |
+| **Code-as-Action** | 代碼即動作 | 編程任務 |
+
+---
+
 *© 2026 chanxaviersy*

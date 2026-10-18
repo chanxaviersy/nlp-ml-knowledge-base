@@ -366,11 +366,73 @@ print(f"\n字元 n-gram 準確率: {lr_char.score(X_test_char, y_test):.4f}")
 
 ---
 
+## ⚡ 快速開始 | Quick Start
+
+```bash
+# 1. 安裝依賴
+pip install scikit-learn jieba pandas matplotlib datasets
+
+# 2. 進入 lab 目錄
+cd docs/08-labs/01-sentiment-analysis
+
+# 3. 直接執行（會自動下載完整 ChnSentiCorp）
+python lab.py
+
+# 或使用離線示例數據（data/sample_train.csv 等）
+# 程式會在線下載失敗時自動 fallback
+```
+
+**執行輸出**：
+- 3 個模型（LogReg / SVM / RF）的對比表
+- 混淆矩陣視覺化
+- 互動式預測介面
+
+---
+
+## 🧪 練習題 | Exercises
+
+| # | 難度 | 題目 |
+|---|------|------|
+| 1 | ⭐ | 試著把 ngram_range 從 (1,2) 改為 (1,3)，觀察 F1 變化 |
+| 2 | ⭐⭐ | 替換為 XGBoost / LightGBM，比較訓練速度與精度 |
+| 3 | ⭐⭐ | 加入自定義停用詞表（如"很""的"等），看是否提升 F1 |
+| 4 | ⭐⭐⭐ | 改用 jieba 詞性標註，只保留名詞/形容詞做特徵 |
+| 5 | ⭐⭐⭐ | 構建 BiLSTM 模型替換 TF-IDF，對比效果 |
+| 6 | ⭐⭐⭐⭐ | 加入主動學習循環：對低置信度樣本進行人工標註再訓練 |
+
+---
+
+## 📊 預期結果 | Expected Results
+
+| 模型 | Accuracy | Precision | Recall | F1 | 訓練時間 |
+|------|----------|-----------|--------|------|----------|
+| Naive Bayes | 0.83 | 0.86 | 0.80 | 0.83 | 0.005s |
+| Logistic Regression | 1.00 | 1.00 | 1.00 | 1.00 | 0.02s |
+| Linear SVM | 0.83 | 0.86 | 0.80 | 0.83 | 0.005s |
+| Random Forest | 0.83 | 0.86 | 0.80 | 0.83 | 0.2s |
+
+**注意**：小數據集結果波動大，實際應用需要更大數據集驗證。在完整 ChnSentiCorp（~9.6K 樣本）上，Logistic Regression 通常能達到 **~88-92%** 準確率。
+
+---
+
+## 🚀 進階方向 | Advanced Topics
+
+1. **預訓練模型路線**：BERT / RoBERTa / GPT → 見 Lab 03
+2. **數據增強**：同義詞替換、回譯、EDA
+3. **多分類**：加入中性類別（3 類）
+4. **多語言**：XLM-RoBERTa
+5. **領域適配**：在通用模型上 finetune 到特定領域
+6. **In-context Learning**：用 ChatGPT / Claude 提示工程
+
+---
+
 ## 📚 參考 | References
 
 - [scikit-learn 文本分類文檔](https://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html)
 - [ChnSentiCorp 數據集](https://github.com/SophonPlus/ChineseNlpCorpus)
 - [jieba 中文分詞](https://github.com/fxsjy/jieba)
+- [TF-IDF 原理](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)
+- [Sentiment Analysis 綜述](https://arxiv.org/abs/2105.08947)
 
 ---
 
